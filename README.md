@@ -1,6 +1,6 @@
 # SeleniumTestAssist
 
-[![Build status](https://ci.appveyor.com/api/projects/status/v3xhi90glw6kw351?svg=true)](https://ci.appveyor.com/project/miyabis/appconfigtransform)
+[![Build status](https://ci.appveyor.com/api/projects/status/kew6mx25v90xylxc?svg=true)](https://ci.appveyor.com/project/miyabis/seleniumtestassist)
 [![NuGet](https://img.shields.io/nuget/v/MiYABiS.SeleniumTestAssist.svg)](https://www.nuget.org/packages/MiYABiS.SeleniumTestAssist/)
 
       assist automatic test using Selenium

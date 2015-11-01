@@ -1,0 +1,260 @@
+﻿
+Imports System.Text
+Imports System.IO
+Imports Microsoft.VisualStudio.TestTools.UnitTesting
+
+Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Remote
+Imports OpenQA.Selenium.IE
+Imports OpenQA.Selenium.Support.UI
+Imports Selenium
+
+''' <summary>
+''' Selemium2 を使ったブラウザテスト用抽象クラス
+''' </summary>
+''' <remarks>
+''' http://docs.seleniumhq.org/ <br/>
+''' </remarks>
+Public MustInherit Class AbstractSeleniumTest
+
+#Region " Declare "
+
+    Const INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS As String = "ignoreProtectedModeSettings"
+    Const ENABLE_ELEMENT_CACHE_CLEANUP As String = "enableElementCacheCleanup"
+    Const IE_ENSURE_CLEAN_SESSION As String = "ie.ensureCleanSession"
+
+    Protected capabilities As ICapabilities
+    Protected driver As IWebDriver
+    Protected javaScriptExecutor As IJavaScriptExecutor
+    Protected driverWait As WebDriverWait
+    Protected timeout As TimeSpan
+    Protected verificationErrors As StringBuilder
+    Protected acceptNextAlert As Boolean = True
+    Protected screenshotCount As Integer
+
+    Protected testContextInstance As TestContext
+
+    Private Shared _baseUrl As String
+
+#Region " Logging For Log4net "
+    ''' <summary>Logging For Log4net</summary>
+    Private Shared ReadOnly _mylog As log4net.ILog = log4net.LogManager.GetLogger(String.Empty)
+#End Region
+#End Region
+
+#Region " Property "
+
+    '''<summary>
+    '''現在のテストの実行についての情報および機能を
+    '''提供するテスト コンテキストを取得または設定します。
+    '''</summary>
+    Public Property TestContext() As TestContext
+        Get
+            Return testContextInstance
+        End Get
+        Set(ByVal value As TestContext)
+            testContextInstance = value
+        End Set
+    End Property
+
+#End Region
+
+#Region " Methods "
+
+    ''' <summary>
+    ''' クラスの最初のテストを実行する前にコードを実行するには、ClassInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Sub SeleniumInitialize(ByVal baseUrl As String)
+        _baseUrl = baseUrl
+    End Sub
+
+    ''' <summary>
+    ''' クラスのすべてのテストを実行した後にコードを実行するには、ClassCleanup 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Sub SeleniumCleanup()
+    End Sub
+
+    ''' <summary>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' 必要であればオーバーライドしてください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Overridable Sub TestInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' 各テストを実行した後にコードを実行するには、TestCleanup 属性を持つメソッドで使用してください。
+    ''' 必要であればオーバーライドしてください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Overridable Sub TestCleanup()
+        Try
+            If driver IsNot Nothing Then
+                getScreenshot()
+                driver.Quit()
+            End If
+        Catch ex As Exception
+            ' Ignore errors if unable to close the browser
+        Finally
+        End Try
+        Assert.AreEqual("", verificationErrors.ToString())
+    End Sub
+
+    ''' <summary>
+    ''' ローカルの Selenium で IE 実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <param name="ieDriverServerPath"></param>
+    ''' <remarks></remarks>
+    Protected Sub IEInitialize(Optional ByVal ieDriverServerPath As String = Nothing)
+        Dim ieDriverServer As String = ieDriverServerPath
+        Dim opt As InternetExplorerOptions = New InternetExplorerOptions()
+
+        If String.IsNullOrEmpty(ieDriverServer) Then
+            ieDriverServer = AppDomain.CurrentDomain.BaseDirectory
+            ieDriverServer = My.Application.Info.DirectoryPath
+        End If
+        'opt.IntroduceInstabilityByIgnoringProtectedModeSettings = True
+        driver = New InternetExplorerDriver(ieDriverServer, opt)
+        capabilities = DirectCast(driver, InternetExplorerDriver).Capabilities
+
+        Dim callingMethod = New System.Diagnostics.StackTrace(1, False).GetFrame(0).GetMethod()
+        Dim attrs() As Attribute = callingMethod.GetCustomAttributes(GetType(DescriptionAttribute), False)
+        Dim description As DescriptionAttribute = Nothing
+        For Each attr As Attribute In attrs
+            If TypeOf attr Is DescriptionAttribute Then
+                description = attr
+            End If
+        Next
+        If description IsNot Nothing Then
+            Me.TestContext.WriteLine(description.Description)
+        End If
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' SeleniumRC で実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub IERemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
+        Dim ieCapability As DesiredCapabilities = DesiredCapabilities.InternetExplorer()
+        ieCapability.SetCapability(INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, True)
+        If Not String.IsNullOrEmpty(version) Then
+            ieCapability.SetCapability("version", version)
+        End If
+        'ieCapability.SetCapability("logFile", "E:\Temp\selenium.log")
+        'ieCapability.SetCapability("logLevel", "TRACE")
+
+        driver = New RemoteWebDriver(New Uri(seleniumURL), ieCapability)
+        capabilities = ieCapability
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' ローカルの Selenium で Firefox 実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub FirefoxInitialize()
+        driver = New Firefox.FirefoxDriver()
+        capabilities = DirectCast(driver, Firefox.FirefoxDriver).Capabilities
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' SeleniumRC で実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub FirefoxRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
+        Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Firefox()
+        If Not String.IsNullOrEmpty(version) Then
+            ieCapability.SetCapability("version", version)
+        End If
+
+        driver = New RemoteWebDriver(New Uri(seleniumURL), ieCapability)
+        capabilities = ieCapability
+
+        _testInitialize()
+    End Sub
+
+    Protected Function isElementPresent(by As By) As Boolean
+        Try
+            driver.FindElement(by)
+            Return True
+        Catch ex As NoSuchElementException
+            Return False
+        End Try
+    End Function
+
+    Protected Function isAlertPresent() As Boolean
+        Try
+            driver.SwitchTo().Alert()
+            Return True
+        Catch ex As NoAlertPresentException
+            Return False
+        End Try
+    End Function
+
+    Protected Function closeAlertAndGetItsText() As String
+        Try
+            Dim wait As New WebDriverWait(driver, TimeSpan.FromSeconds(10))
+            wait.Until(Function(d)
+                           Return driver.SwitchTo().Alert() IsNot Nothing
+                       End Function)
+            Dim alert As IAlert = driver.SwitchTo().Alert()
+            Dim alertText As String = alert.Text
+            If acceptNextAlert Then
+                alert.Accept()
+            Else
+                alert.Dismiss()
+            End If
+            Return alertText
+        Finally
+            acceptNextAlert = True
+        End Try
+    End Function
+
+    Protected Sub getScreenshot()
+        Dim savePath As String = Path.Combine(Me.TestContext.ResultsDirectory, Me.TestContext.FullyQualifiedTestClassName.Replace(".", "\"))
+        If Not Directory.Exists(savePath) Then
+            Directory.CreateDirectory(savePath)
+        End If
+        Dim filename As String = String.Format("{0}_{1}.png", Me.TestContext.TestName, screenshotCount)
+        Dim fullPath As String = Path.Combine(savePath, filename)
+        CType(driver, ITakesScreenshot).GetScreenshot().SaveAsFile(fullPath, System.Drawing.Imaging.ImageFormat.Png)
+        Me.TestContext.AddResultFile(fullPath)
+        screenshotCount += 1
+    End Sub
+
+    Protected Sub sleep(Optional ByVal value As Integer = 300)
+        System.Threading.Thread.Sleep(value)
+    End Sub
+
+    Protected Function CreatePage(Of T)() As T
+        Return CType(Activator.CreateInstance(GetType(T), New Object() {driver, _baseUrl}), T)
+    End Function
+
+    Private Sub _testInitialize()
+        timeout = New TimeSpan(0, 0, 10)
+        driverWait = New WebDriverWait(driver, timeout)
+        driver.Manage.Timeouts.ImplicitlyWait(timeout)
+
+        javaScriptExecutor = DirectCast(driver, IJavaScriptExecutor)
+
+        verificationErrors = New StringBuilder()
+        screenshotCount = 0
+
+        Me.TestContext.WriteLine("WebDriver：{0}", capabilities.ToString)
+        _mylog.DebugFormat("WebDriver：{0}", capabilities.ToString)
+    End Sub
+
+#End Region
+
+End Class
