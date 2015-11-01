@@ -156,6 +156,41 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
+    ''' ローカルの Selenium で Edge 実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub EdgeInitialize(Optional ByVal ieDriverServerPath As String = Nothing)
+        Dim ieDriverServer As String = ieDriverServerPath
+
+        If ieDriverServer Is Nothing Then
+            driver = New Edge.EdgeDriver()
+        Else
+            driver = New Edge.EdgeDriver(ieDriverServer)
+        End If
+        capabilities = DirectCast(driver, Edge.EdgeDriver).Capabilities
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' SeleniumRC で実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub EdgeRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
+        Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Edge()
+        If Not String.IsNullOrEmpty(version) Then
+            ieCapability.SetCapability("version", version)
+        End If
+
+        driver = New RemoteWebDriver(New Uri(seleniumURL), ieCapability)
+        capabilities = ieCapability
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
     ''' ローカルの Selenium で Firefox 実行する時の初期化
     ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
     ''' </summary>
@@ -174,6 +209,35 @@ Public MustInherit Class AbstractSeleniumTest
     ''' <remarks></remarks>
     Protected Sub FirefoxRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
         Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Firefox()
+        If Not String.IsNullOrEmpty(version) Then
+            ieCapability.SetCapability("version", version)
+        End If
+
+        driver = New RemoteWebDriver(New Uri(seleniumURL), ieCapability)
+        capabilities = ieCapability
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' ローカルの Selenium で Chrome 実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ChromeInitialize()
+        driver = New Chrome.ChromeDriver()
+        capabilities = DirectCast(driver, Chrome.ChromeDriver).Capabilities
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' SeleniumRC で実行する時の初期化
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ChromeRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
+        Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Chrome()
         If Not String.IsNullOrEmpty(version) Then
             ieCapability.SetCapability("version", version)
         End If
@@ -237,7 +301,7 @@ Public MustInherit Class AbstractSeleniumTest
         System.Threading.Thread.Sleep(value)
     End Sub
 
-    Protected Function CreatePage(Of T)() As T
+    Protected Function createPage(Of T)() As T
         Return CType(Activator.CreateInstance(GetType(T), New Object() {driver, _baseUrl}), T)
     End Function
 
