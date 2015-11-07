@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MiYABiS.SeleniumTestAssist</id>
+    <version>$version$</version>
+    <title>Selenium Test Assist</title>
+    <authors>MiYABiS</authors>
+    <owners>MiYABiS</owners>
+    <licenseUrl>https://github.com/miyabis/SeleniumTestAssist#license</licenseUrl>
+    <projectUrl>http://miyabis.github.io/SeleniumTestAssist/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      It is a wrapper library to use Selenium in MSTest.
+      Preparing such as Selenium is a little easier.
+      The screenshot will be output to the result of MSTest when you use the method that was prepared.
+    </description>
+    <summary></summary>
+    <copyright>Copyright © 2015 MiYABiS All Rights Reserved.</copyright>
+    <language>en-US</language>
+    <tags></tags>
+    <dependencies>
+      <dependency id="log4net" version="2.0.3" />
+      <dependency id="Selenium.WebDriver" version="2.48.0" />
+      <dependency id="Selenium.Support" version="2.48.0" />
+      <dependency id="Selenium.WebDriverBackedSelenium" version="2.48.0" />
+      <dependency id="Selenium.RC" version="2.48.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\SeleniumTestAssist\bin\Release\net35\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\net35\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist\bin\Release\net40\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\net40\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist\bin\Release\net45\SeleniumTestAssist.dll" target="lib\net45\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\net45\SeleniumTestAssist.xml" target="lib\net45\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist\bin\Release\net46\SeleniumTestAssist.dll" target="lib\net46\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\net46\SeleniumTestAssist.xml" target="lib\net46\SeleniumTestAssist.xml" />
+  </files>
+</package>
