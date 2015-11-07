@@ -2,17 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MiYABiS.SeleniumTestAssist</id>
-    <version>1.1.0</version>
+    <version>1.0.0</version>
     <title>Selenium Test Assist</title>
     <authors>MiYABiS</authors>
     <owners>MiYABiS</owners>
     <licenseUrl>https://github.com/miyabis/SeleniumTestAssist#license</licenseUrl>
-    <projectUrl>http://miyabis.github.io/SeleniumTestAssist/</projectUrl>
+    <projectUrl>https://github.com/miyabis/SeleniumTestAssist</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      It is a wrapper library to use Selenium in MSTest.
-      Preparing such as Selenium is a little easier.
-      The screenshot will be output to the result of MSTest when you use the method that was prepared.
+      assist automatic test using Selenium
     </description>
     <summary></summary>
     <copyright>Copyright © 2015 MiYABiS All Rights Reserved.</copyright>
@@ -31,7 +29,5 @@
     <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
-    <file src="..\SeleniumTestAssist46\bin\Release\SeleniumTestAssist.dll" target="lib\net46\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist46\bin\Release\SeleniumTestAssist.xml" target="lib\net46\SeleniumTestAssist.xml" />
   </files>
 </package>

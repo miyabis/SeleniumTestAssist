@@ -33,3 +33,6 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("3.5.0.0")>
 <Assembly: AssemblyFileVersion("3.5.0.0")>
+
+' プログラム要素が CLS (Common Language Specification) に準拠しているかどうかを示します
+<Assembly: System.CLSCompliant(True)>

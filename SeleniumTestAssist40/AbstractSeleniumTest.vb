@@ -116,7 +116,7 @@ Public MustInherit Class AbstractSeleniumTest
             ieDriverServer = AppDomain.CurrentDomain.BaseDirectory
             ieDriverServer = My.Application.Info.DirectoryPath
         End If
-        'opt.IntroduceInstabilityByIgnoringProtectedModeSettings = True
+        opt.IntroduceInstabilityByIgnoringProtectedModeSettings = True
         driver = New InternetExplorerDriver(ieDriverServer, opt)
         capabilities = DirectCast(driver, InternetExplorerDriver).Capabilities
 
