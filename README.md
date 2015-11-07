@@ -40,11 +40,41 @@ Please search for , such as " chromedriver " in NuGet.
 Programming
 =======
 
-|:-|:-|
-|ClassInitialize Attribute|SeleniumInitialize()|
-|ClassCleanup Attribute|SeleniumCleanup()|
-|TestInitialize Attribute|Selenium Browser Initialize method|
-|TestCleanup Attribute|base.TestCleanup()|
+Please be inherited by the test class "AbstractSeleniumTest" class.  
+In the method of initialization and termination of the attributes of the test , you run the following methods.
+
+It is already mounted if you use the " Selenium test class " of the template.
+
+* ClassInitialize : SeleniumInitialize
+* ClassCleanup : SeleniumCleanup
+* TestInitialize : Selenium Browser Initialize methods
+* TestCleanup : base.TestCleanup
+
+Preparation method of Selenium is as follows .  
+It runs at initialization method or in each test gave a TestInitialize attribute .
+
+**Initialization of when running in local**
+
+* IEInitialize
+* EdgeInitialize
+* FirefoxInitialize
+* ChromeInitialize
+
+**Initialization of when running in SeleniumRC**
+
+* IERemoteInitialize
+* EdgeRemoteInitialize
+* FirefoxRemoteInitialize
+* ChromeRemoteInitialize
+
+Screenshot
+=======
+The screenshot will be output to the result of MSTest when you use the method that was prepared .
+
+
+Launch the IISExpress
+=======
+Please use the " IISExpressManager " class to also start IISExpress in the test.
 
 
 License
