@@ -25,8 +25,9 @@
 <p><a href="https://ci.appveyor.com/project/miyabis/seleniumtestassist"><img src="https://ci.appveyor.com/api/projects/status/kew6mx25v90xylxc?svg=true" alt="Build status"></a>
 <a href="https://www.nuget.org/packages/MiYABiS.SeleniumTestAssist/"><img src="https://img.shields.io/nuget/v/MiYABiS.SeleniumTestAssist.svg" alt="NuGet"></a></p>
 
-<pre><code>  assist automatic test using Selenium
-</code></pre>
+<p>It is a wrapper library to use Selenium in MSTest.<br>
+Preparing such as Selenium is a little easier.<br>
+The screenshot will be output to the result of MSTest when you use the method that was prepared.</p>
 
 <h1>
 <a id="how-to-get" class="anchor" href="#how-to-get" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to get</h1>
@@ -35,6 +36,76 @@
 
 <pre><code>PM&gt; Install-Package MiYABiS.SeleniumTestAssist
 </code></pre>
+
+<h1>
+<a id="class-creation-template" class="anchor" href="#class-creation-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Class creation template</h1>
+
+<p>Please add the extension of the following If you use a template.</p>
+
+<ul>
+<li>VS2012 Or later : <a href="https://visualstudiogallery.msdn.microsoft.com/7735e52f-74f2-4ac7-8172-11cde77e6290">Moca.NET Templates</a>
+</li>
+<li>VS2010 : <a href="https://visualstudiogallery.msdn.microsoft.com/f97a7486-560b-425a-aa05-528dd397f5ba">Moca.NET Templates 2010</a>
+</li>
+</ul>
+
+<h1>
+<a id="test-in-ie" class="anchor" href="#test-in-ie" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test in IE</h1>
+
+<p>When testing in IE requires drivers.<br>
+Please search for , such as " iedriver " in NuGet.</p>
+
+<h1>
+<a id="test-in-chrome" class="anchor" href="#test-in-chrome" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test in Chrome</h1>
+
+<p>The same is true when you want to test in Chrome.<br>
+Please search for , such as " chromedriver " in NuGet.</p>
+
+<h1>
+<a id="programming" class="anchor" href="#programming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Programming</h1>
+
+<p>Please be inherited by the test class "AbstractSeleniumTest" class.<br>
+In the method of initialization and termination of the attributes of the test , you run the following methods.</p>
+
+<p>It is already mounted if you use the " Selenium test class " of the template.</p>
+
+<ul>
+<li>ClassInitialize : SeleniumInitialize</li>
+<li>ClassCleanup : SeleniumCleanup</li>
+<li>TestInitialize : Selenium Browser Initialize methods</li>
+<li>TestCleanup : base.TestCleanup</li>
+</ul>
+
+<p>Preparation method of Selenium is as follows .<br>
+It runs at initialization method or in each test gave a TestInitialize attribute .</p>
+
+<p><strong>Initialization of when running in local</strong></p>
+
+<ul>
+<li>IEInitialize</li>
+<li>EdgeInitialize</li>
+<li>FirefoxInitialize</li>
+<li>ChromeInitialize</li>
+</ul>
+
+<p><strong>Initialization of when running in SeleniumRC</strong></p>
+
+<ul>
+<li>IERemoteInitialize</li>
+<li>EdgeRemoteInitialize</li>
+<li>FirefoxRemoteInitialize</li>
+<li>ChromeRemoteInitialize</li>
+</ul>
+
+<h1>
+<a id="screenshot" class="anchor" href="#screenshot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot</h1>
+
+<p>The screenshot will be output to the result of MSTest when you use the method that was prepared .</p>
+
+<h1>
+<a id="launch-the-iisexpress" class="anchor" href="#launch-the-iisexpress" aria-hidden="true"><span class="octicon octicon-link"></span></a>Launch the IISExpress</h1>
+
+<p>Please use the " IISExpressManager " class to also start IISExpress in the test.</p>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
