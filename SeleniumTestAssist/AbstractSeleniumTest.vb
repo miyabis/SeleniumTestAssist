@@ -8,6 +8,7 @@ Imports OpenQA.Selenium.Remote
 Imports OpenQA.Selenium.IE
 Imports OpenQA.Selenium.Support.UI
 Imports Selenium
+Imports OpenQA.Selenium.Firefox
 
 ''' <summary>
 ''' Selemium2 を使ったブラウザテスト用抽象クラス
@@ -102,12 +103,15 @@ Public MustInherit Class AbstractSeleniumTest
         Assert.AreEqual("", verificationErrors.ToString())
     End Sub
 
+#Region " IE "
+
     ''' <summary>
     ''' ローカルの Selenium で IE 実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
     ''' </summary>
     ''' <param name="ieDriverServerPath"></param>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub IEInitialize(Optional ByVal ieDriverServerPath As String = Nothing)
         Dim ieDriverServer As String = ieDriverServerPath
         Dim opt As InternetExplorerOptions = New InternetExplorerOptions()
@@ -136,10 +140,11 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
-    ''' SeleniumRC で実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' SeleniumRC で IE 実行する時の初期化
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub IERemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
         Dim ieCapability As DesiredCapabilities = DesiredCapabilities.InternetExplorer()
         ieCapability.SetCapability(INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, True)
@@ -155,11 +160,15 @@ Public MustInherit Class AbstractSeleniumTest
         _testInitialize()
     End Sub
 
+#End Region
+#Region " Edge "
+
     ''' <summary>
     ''' ローカルの Selenium で Edge 実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub EdgeInitialize(Optional ByVal ieDriverServerPath As String = Nothing)
         Dim ieDriverServer As String = ieDriverServerPath
 
@@ -174,10 +183,11 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
-    ''' SeleniumRC で実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' SeleniumRC で Edge 実行する時の初期化
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub EdgeRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
         Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Edge()
         If Not String.IsNullOrEmpty(version) Then
@@ -190,12 +200,16 @@ Public MustInherit Class AbstractSeleniumTest
         _testInitialize()
     End Sub
 
+#End Region
+#Region " Firefox "
+
     ''' <summary>
     ''' ローカルの Selenium で Firefox 実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
     ''' </summary>
-    ''' <remarks></remarks>
-    Protected Sub FirefoxInitialize()
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
+    Protected Overloads Sub FirefoxInitialize()
         driver = New Firefox.FirefoxDriver()
         capabilities = DirectCast(driver, Firefox.FirefoxDriver).Capabilities
 
@@ -203,11 +217,12 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
-    ''' SeleniumRC で実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' SeleniumRC で Firefox 実行する時の初期化
     ''' </summary>
-    ''' <remarks></remarks>
-    Protected Sub FirefoxRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
+    Protected Overloads Sub FirefoxRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
         Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Firefox()
         If Not String.IsNullOrEmpty(version) Then
             ieCapability.SetCapability("version", version)
@@ -220,10 +235,79 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
-    ''' ローカルの Selenium で Chrome 実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' ローカルの Selenium で Firefox 実行する時の初期化
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <param name="proxyHost">プロキシのホスト</param>
+    ''' <param name="proxyPort">プロキシのポート</param>
+    ''' <param name="autoAuthHosts">プロキシなしで接続するホスト名のカンマ区切り</param>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
+    Protected Overloads Sub FirefoxInitialize(ByVal proxyHost As String, ByVal proxyPort As String, Optional ByVal autoAuthHosts As String = Nothing)
+        Dim proxy As New OpenQA.Selenium.Proxy
+        proxy.HttpProxy = proxyHost & ":" & proxyPort
+
+        Dim profile As New FirefoxProfile()
+        profile.SetProxyPreferences(proxy)
+        If Not String.IsNullOrEmpty(autoAuthHosts) Then
+            profile.SetPreference("network.proxy.no_proxies_on", autoAuthHosts)
+            profile.SetPreference("network.negotiate-auth.trusted-uris", autoAuthHosts)
+            'profile.SetPreference("network.automatic-ntlm-auth.trusted-uris", autoAuthHosts)
+            'profile.SetPreference("network.negotiate-auth.delegation-uris", autoAuthHosts)
+        End If
+
+        driver = New Firefox.FirefoxDriver(profile)
+        capabilities = DirectCast(driver, Firefox.FirefoxDriver).Capabilities
+
+        _testInitialize()
+    End Sub
+
+    ''' <summary>
+    ''' SeleniumRC で Firefox 実行する時の初期化
+    ''' </summary>
+    ''' <param name="seleniumURL">SeleniumRC の URL</param>
+    ''' <param name="proxyHost">プロキシのホスト</param>
+    ''' <param name="proxyPort">プロキシのポート</param>
+    ''' <param name="autoAuthHosts">プロキシなしで接続するホスト名のカンマ区切り</param>
+    ''' <param name="version">実行するブラウザのバージョン</param>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
+    Protected Overloads Sub FirefoxRemoteInitialize(ByVal seleniumURL As String, ByVal proxyHost As String, ByVal proxyPort As String, Optional ByVal autoAuthHosts As String = Nothing, Optional ByVal version As String = Nothing)
+        Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Firefox()
+        If Not String.IsNullOrEmpty(version) Then
+            ieCapability.SetCapability("version", version)
+        End If
+
+        Dim proxy As New OpenQA.Selenium.Proxy
+        proxy.HttpProxy = proxyHost & ":" & proxyPort
+
+        Dim profile As New FirefoxProfile()
+        profile.SetProxyPreferences(proxy)
+        If Not String.IsNullOrEmpty(autoAuthHosts) Then
+            profile.SetPreference("network.proxy.no_proxies_on", autoAuthHosts)
+            profile.SetPreference("network.negotiate-auth.trusted-uris", autoAuthHosts)
+            'profile.SetPreference("network.automatic-ntlm-auth.trusted-uris", autoAuthHosts)
+            'profile.SetPreference("network.negotiate-auth.delegation-uris", autoAuthHosts)
+        End If
+        ieCapability.SetCapability(FirefoxDriver.ProfileCapabilityName, profile.ToBase64String())
+
+        driver = New RemoteWebDriver(New Uri(seleniumURL), ieCapability)
+
+        capabilities = ieCapability
+
+        _testInitialize()
+    End Sub
+
+#End Region
+#Region " Chrome "
+
+    ''' <summary>
+    ''' ローカルの Selenium で Chrome 実行する時の初期化
+    ''' </summary>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub ChromeInitialize()
         driver = New Chrome.ChromeDriver()
         capabilities = DirectCast(driver, Chrome.ChromeDriver).Capabilities
@@ -232,10 +316,11 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     ''' <summary>
-    ''' SeleniumRC で実行する時の初期化
-    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' SeleniumRC で Chrome 実行する時の初期化
     ''' </summary>
-    ''' <remarks></remarks>
+    ''' <remarks>
+    ''' 各テストを実行する前にコードを実行するには、TestInitialize 属性を持つメソッドで使用してください。
+    ''' </remarks>
     Protected Sub ChromeRemoteInitialize(ByVal seleniumURL As String, Optional ByVal version As String = Nothing)
         Dim ieCapability As DesiredCapabilities = DesiredCapabilities.Chrome()
         If Not String.IsNullOrEmpty(version) Then
@@ -247,6 +332,8 @@ Public MustInherit Class AbstractSeleniumTest
 
         _testInitialize()
     End Sub
+
+#End Region
 
     Protected Function isElementPresent(by As By) As Boolean
         Try
