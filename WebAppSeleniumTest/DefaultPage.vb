@@ -15,12 +15,12 @@ Public Class DefaultPage
         MyBase.New(driver, baseUrl)
     End Sub
 
-    Public Function HogeElement() As IWebElement
+    Public Function Hoge() As IWebElement
         Return Driver.FindElement(By.CssSelector(".hoge"))
     End Function
 
-    Public Sub HogeElementAssert(ByVal value As String)
-        Assert.AreEqual(Me.HogeElement().Text, value)
+    Public Sub HogeAssert(ByVal value As String)
+        Assert.AreEqual(Me.Hoge().Text, value)
     End Sub
 
 End Class

@@ -105,6 +105,7 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassTest.vb" />
     <Compile Include="DefaultPage.vb" />
     <Compile Include="DemoPage.vb" />
     <Compile Include="LoginPage.vb" />

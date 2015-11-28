@@ -1,12 +1,13 @@
 ﻿
 Imports MiYABiS.SeleniumTestAssist
 
-<TestClass()> Public Class UnitTest1
+<TestClass()>
+Public Class ClassTest
     Inherits AbstractSeleniumTest
 
 #Region " Declare "
 
-    Private Const _PORT As Integer = 50744
+    Private Const _PORT As Integer = 80
 
     Private Shared _baseUrl As String = String.Format("http://localhost:{0}/", _PORT)
 
@@ -25,13 +26,6 @@ Imports MiYABiS.SeleniumTestAssist
     ''' <remarks></remarks>
     <ClassInitialize()>
     Public Shared Sub ClassInitialize(ByVal testContext As TestContext)
-        IISExpressManager.ProjectName = "WebApp"
-        'IISExpressManager.VPath = "/Test"
-        IISExpressManager.Port = _PORT
-        'IISExpressManager.Clr = "v4.0"
-        'IISExpressManager.Ntlm = False
-        IISExpressManager.Start()
-
         SeleniumInitialize(_baseUrl)
     End Sub
 
@@ -42,8 +36,6 @@ Imports MiYABiS.SeleniumTestAssist
     <ClassCleanup()>
     Public Shared Sub ClassCleanup()
         SeleniumCleanup()
-
-        IISExpressManager.Stop()
     End Sub
 
     ''' <summary>
@@ -52,6 +44,7 @@ Imports MiYABiS.SeleniumTestAssist
     ''' <remarks></remarks>
     <TestInitialize()>
     Public Overrides Sub TestInitialize()
+        IEInitialize()
     End Sub
 
     ''' <summary>
@@ -65,54 +58,14 @@ Imports MiYABiS.SeleniumTestAssist
 
 #End Region
 
+#Region " TestMethod "
+
     <TestMethod(),
-     Description("テストが表示されること"),
-     TestCategory("表示系")>
+     Description("テスト内容"),
+     TestCategory("カテゴリ")>
     Public Sub TestMethod1()
-        IEInitialize()
-
-        Dim page As DefaultPage
-        page = createPage(Of DefaultPage)()
-
-        page.Open(1000, 1000)
-
-        page.HogeAssert("テスト")
     End Sub
 
-    <TestMethod(),
-     Description("ログインエラーとなること"),
-     TestCategory("エラー系")>
-    Public Sub TestMethod2()
-        IEInitialize()
-
-        Dim page As LoginPage
-        page = createPage(Of LoginPage)()
-
-        page.Open(1000, 1000)
-
-        page.Email("test")
-        page.Password("hoge")
-        page.RememberMe(True)
-    End Sub
-
-    <TestMethod(),
-     Description("Demoページテスト"),
-     TestCategory("正常系")>
-    Public Sub TestMethod3()
-        'IEInitialize()
-        'FirefoxInitialize()
-        'ChromeInitialize()
-        EdgeInitialize("C:\Program Files (x86)\Microsoft Web Driver\")
-
-        Dim page As DemoPage
-        page = createPage(Of DemoPage)()
-
-        'page.Open(1000, 1000)
-        page.Open()
-
-        page.TextBox1("test")
-        page.CheckBox1(True)
-        page.DropDownList1("demo2")
-    End Sub
+#End Region
 
 End Class
