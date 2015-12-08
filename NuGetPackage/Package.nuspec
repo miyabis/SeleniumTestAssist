@@ -17,7 +17,7 @@
     <summary></summary>
     <copyright>Copyright © 2015 MiYABiS All Rights Reserved.</copyright>
     <language>en-US</language>
-    <tags></tags>
+    <tags>Selenium MSTest</tags>
     <dependencies>
       <dependency id="log4net" version="2.0.4" />
       <dependency id="Selenium.WebDriver" version="2.48.2" />

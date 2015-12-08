@@ -11,6 +11,11 @@
     <div class="hoge">
         テスト
     </div>
+    <div>
+        <asp:Button runat="server" ID="btnTest" Text="Enter" />
+        <br />
+        <asp:TextBox runat="server" ID="txtTest"></asp:TextBox>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <h2>Getting Started</h2>

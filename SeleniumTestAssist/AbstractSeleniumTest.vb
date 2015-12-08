@@ -335,6 +335,24 @@ Public MustInherit Class AbstractSeleniumTest
 
 #End Region
 
+    'TODO:
+    '''' <summary>
+    '''' FindElement をデフォルト１０秒まで取得できるまで待つ
+    '''' </summary>
+    '''' <param name="by"></param>
+    '''' <returns></returns>
+    'Protected Function FindElementWaitUntil(ByVal by As By) As IWebElement
+    '    Return driverWait.Until(
+    '        Function(d)
+    '            Dim el As IWebElement
+    '            el = d.FindElement(by)
+    '            If el.Displayed And el.Enabled Then
+    '                Return el
+    '            End If
+    '            Return Nothing
+    '        End Function)
+    'End Function
+
     Protected Function isElementPresent(by As By) As Boolean
         Try
             driver.FindElement(by)
@@ -372,13 +390,17 @@ Public MustInherit Class AbstractSeleniumTest
         End Try
     End Function
 
-    Protected Sub getScreenshot()
+    Protected Overloads Sub getScreenshot()
+        getScreenshot(Nothing)
+    End Sub
+
+    Protected Overloads Sub getScreenshot(ByVal title As String)
         Dim savePath As String = Path.Combine(Me.TestContext.ResultsDirectory, Me.TestContext.FullyQualifiedTestClassName.Replace(".", "\"))
         If Not Directory.Exists(savePath) Then
             Directory.CreateDirectory(savePath)
         End If
-        Dim filename As String = String.Format("{0}_{1}.png", Me.TestContext.TestName, screenshotCount)
-        Dim fullPath As String = Path.Combine(savePath, filename)
+        Dim fn As String = String.Format("{0}_{1:00000}{2}.png", Me.TestContext.TestName, screenshotCount, IIf(String.IsNullOrEmpty(title), String.Empty, "_" & title))
+        Dim fullPath As String = Path.Combine(savePath, fn)
         CType(driver, ITakesScreenshot).GetScreenshot().SaveAsFile(fullPath, System.Drawing.Imaging.ImageFormat.Png)
         Me.TestContext.AddResultFile(fullPath)
         screenshotCount += 1

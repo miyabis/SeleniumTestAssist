@@ -76,7 +76,10 @@ Imports MiYABiS.SeleniumTestAssist
 
         page.Open(1000, 1000)
 
-        page.HogeElementAssert("テスト")
+        page.HogeAssert("テスト")
+
+        page.BtnTest.Click()
+        page.TestAssert("btnTest Click!")
     End Sub
 
     <TestMethod(),
@@ -89,6 +92,8 @@ Imports MiYABiS.SeleniumTestAssist
         page = createPage(Of LoginPage)()
 
         page.Open(1000, 1000)
+
+        getScreenshot("オープン直後")
 
         page.Email("test")
         page.Password("hoge")

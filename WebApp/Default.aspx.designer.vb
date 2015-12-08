@@ -12,4 +12,22 @@ Option Explicit On
 
 
 Partial Public Class _Default
+    
+    '''<summary>
+    '''btnTest コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents btnTest As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''txtTest コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents txtTest As Global.System.Web.UI.WebControls.TextBox
 End Class

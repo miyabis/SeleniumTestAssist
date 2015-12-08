@@ -1,5 +1,6 @@
 ﻿
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.UI
 
 ''' <summary>
 ''' Seleniumアクション
@@ -10,6 +11,7 @@ Public MustInherit Class SeleniumAction
 
     Private _driver As IWebDriver
     Private _baseUrl As String
+    Private _driverWait As WebDriverWait
 
 #End Region
 
@@ -26,6 +28,8 @@ Public MustInherit Class SeleniumAction
         If Not baseUrl.EndsWith("/") Then
             _baseUrl &= "/"
         End If
+        Dim timeout As TimeSpan = New TimeSpan(0, 0, 10)
+        _driverWait = New WebDriverWait(_driver, timeout)
     End Sub
 
 #End Region
@@ -158,6 +162,24 @@ Public MustInherit Class SeleniumAction
         selectElement = New Support.UI.SelectElement(element)
         selectElement.SelectByIndex(value)
     End Sub
+
+    'TODO:
+    '''' <summary>
+    '''' FindElement をデフォルト１０秒まで取得できるまで待つ
+    '''' </summary>
+    '''' <param name="by"></param>
+    '''' <returns></returns>
+    'Public Function FindElementWaitUntil(ByVal by As By) As IWebElement
+    '    Return _driverWait.Until(
+    '        Function(d)
+    '            Dim el As IWebElement
+    '            el = d.FindElement(by)
+    '            If el.Displayed And el.Enabled Then
+    '                Return el
+    '            End If
+    '            Return Nothing
+    '        End Function)
+    'End Function
 
 #End Region
 
