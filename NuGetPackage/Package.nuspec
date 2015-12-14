@@ -27,8 +27,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist\bin\Release\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
     <file src="..\SeleniumTestAssist45\bin\Release\SeleniumTestAssist.dll" target="lib\net45\SeleniumTestAssist.dll" />
