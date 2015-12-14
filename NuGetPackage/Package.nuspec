@@ -27,13 +27,13 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\SeleniumTestAssist\bin\Release\net35\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist\bin\Release\net35\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
-    <file src="..\SeleniumTestAssist\bin\Release\net40\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist\bin\Release\net40\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
-    <file src="..\SeleniumTestAssist\bin\Release\net45\SeleniumTestAssist.dll" target="lib\net45\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist\bin\Release\net45\SeleniumTestAssist.xml" target="lib\net45\SeleniumTestAssist.xml" />
-    <file src="..\SeleniumTestAssist\bin\Release\net46\SeleniumTestAssist.dll" target="lib\net46\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist\bin\Release\net46\SeleniumTestAssist.xml" target="lib\net46\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist45\bin\Release\SeleniumTestAssist.dll" target="lib\net45\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist45\bin\Release\SeleniumTestAssist.xml" target="lib\net45\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist46\bin\Release\SeleniumTestAssist.dll" target="lib\net46\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist46\bin\Release\SeleniumTestAssist.xml" target="lib\net46\SeleniumTestAssist.xml" />
   </files>
 </package>
