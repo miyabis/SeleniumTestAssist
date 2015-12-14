@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MiYABiS.SeleniumTestAssist</id>
-    <version>1.1.0</version>
+    <version>1.3.0-Beta</version>
     <title>Selenium Test Assist</title>
     <authors>MiYABiS</authors>
     <owners>MiYABiS</owners>
@@ -17,13 +17,13 @@
     <summary></summary>
     <copyright>Copyright © 2015 MiYABiS All Rights Reserved.</copyright>
     <language>en-US</language>
-    <tags></tags>
+    <tags>Selenium MSTest</tags>
     <dependencies>
-      <dependency id="log4net" version="2.0.3" />
-      <dependency id="Selenium.WebDriver" version="2.48.0" />
-      <dependency id="Selenium.Support" version="2.48.0" />
-      <dependency id="Selenium.WebDriverBackedSelenium" version="2.48.0" />
-      <dependency id="Selenium.RC" version="2.48.0" />
+      <dependency id="log4net" version="2.0.4" />
+      <dependency id="Selenium.WebDriver" version="2.48.2" />
+      <dependency id="Selenium.Support" version="2.48.2" />
+      <dependency id="Selenium.WebDriverBackedSelenium" version="2.48.2" />
+      <dependency id="Selenium.RC" version="2.48.2" />
     </dependencies>
   </metadata>
   <files>

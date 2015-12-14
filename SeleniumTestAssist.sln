@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist452", "SeleniumTestAssist\SeleniumTestAssist452.vbproj", "{5C423370-15AA-4B89-809B-8CB02705ECF1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{27201102-7046-4D4E-9CA6-33BB50EAE1D5}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
@@ -17,10 +15,6 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WebAppSeleniumTest", "WebAp
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist35", "SeleniumTestAssist\SeleniumTestAssist35.vbproj", "{8F0EB1ED-59B4-4C59-846E-6571091B200F}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist40", "SeleniumTestAssist\SeleniumTestAssist40.vbproj", "{D30FAA61-C788-4449-A4BC-8A084FE51528}"
-EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist46", "SeleniumTestAssist\SeleniumTestAssist46.vbproj", "{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTestAssist", "NuGetPackage\SeleniumTestAssist.csproj", "{2F2C043C-EF1F-4E32-95BB-3E14B13E88ED}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D30FAA61-C788-4449-A4BC-8A084FE51528} = {D30FAA61-C788-4449-A4BC-8A084FE51528}
@@ -29,16 +23,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTestAssist", "NuGet
 		{8F0EB1ED-59B4-4C59-846E-6571091B200F} = {8F0EB1ED-59B4-4C59-846E-6571091B200F}
 	EndProjectSection
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist40", "SeleniumTestAssist40\SeleniumTestAssist40.vbproj", "{D30FAA61-C788-4449-A4BC-8A084FE51528}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist45", "SeleniumTestAssist45\SeleniumTestAssist45.vbproj", "{5C423370-15AA-4B89-809B-8CB02705ECF1}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SeleniumTestAssist46", "SeleniumTestAssist46\SeleniumTestAssist46.vbproj", "{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CD8E53D2-B177-494B-AE08-1CEEF98E43D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD8E53D2-B177-494B-AE08-1CEEF98E43D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD8E53D2-B177-494B-AE08-1CEEF98E43D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,18 +45,22 @@ Global
 		{8F0EB1ED-59B4-4C59-846E-6571091B200F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F0EB1ED-59B4-4C59-846E-6571091B200F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F0EB1ED-59B4-4C59-846E-6571091B200F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F2C043C-EF1F-4E32-95BB-3E14B13E88ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F2C043C-EF1F-4E32-95BB-3E14B13E88ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F2C043C-EF1F-4E32-95BB-3E14B13E88ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F2C043C-EF1F-4E32-95BB-3E14B13E88ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30FAA61-C788-4449-A4BC-8A084FE51528}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C423370-15AA-4B89-809B-8CB02705ECF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49CD7FE4-AF0F-4262-A929-A7D71335B5B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

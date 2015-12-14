@@ -9,6 +9,7 @@ Imports OpenQA.Selenium.IE
 Imports OpenQA.Selenium.Support.UI
 Imports Selenium
 Imports OpenQA.Selenium.Firefox
+Imports OfficeOpenXml
 
 ''' <summary>
 ''' Selemium2 を使ったブラウザテスト用抽象クラス
@@ -43,6 +44,8 @@ Public MustInherit Class AbstractSeleniumTest
 #End Region
 #End Region
 
+    Protected Friend Shared screenshots As IList(Of ScreenshotRow)
+
 #Region " Property "
 
     '''<summary>
@@ -68,6 +71,7 @@ Public MustInherit Class AbstractSeleniumTest
     ''' <remarks></remarks>
     Public Shared Sub SeleniumInitialize(ByVal baseUrl As String)
         _baseUrl = baseUrl
+        screenshots = New List(Of ScreenshotRow)
     End Sub
 
     ''' <summary>
@@ -75,6 +79,8 @@ Public MustInherit Class AbstractSeleniumTest
     ''' </summary>
     ''' <remarks></remarks>
     Public Shared Sub SeleniumCleanup()
+
+        screenshots = New Dictionary(Of String, String)
     End Sub
 
     ''' <summary>
@@ -94,13 +100,45 @@ Public MustInherit Class AbstractSeleniumTest
         Try
             If driver IsNot Nothing Then
                 getScreenshot()
+            End If
+        Finally
+            If driver IsNot Nothing Then
                 driver.Quit()
             End If
-        Catch ex As Exception
-            ' Ignore errors if unable to close the browser
-        Finally
         End Try
         Assert.AreEqual("", verificationErrors.ToString())
+
+        Dim package As New ExcelPackage()
+        Dim ws As ExcelWorksheet = Nothing
+
+        Dim colIndex As Integer = 2
+        Dim rowIndex As Integer = 2
+        Dim sheetname As String = String.Empty
+
+        For Each row As ScreenshotRow In screenshots
+            If sheetname <> row.TestMethodName Then
+                ws = package.Workbook.Worksheets.Add(row.TestMethodName)
+                ws.Cells.Style.Font.SetFromFont(New System.Drawing.Font("Meiryo UI", 10, System.Drawing.FontStyle.Regular))
+                sheetname = row.TestMethodName
+                rowIndex = 2
+            End If
+            Debug.Print("{0} = {1}", row.TestMethodName, row.FullPath)
+
+            Dim img As System.Drawing.Image
+            img = System.Drawing.Image.FromFile(row.FullPath)
+            Dim picture = ws.Drawings.AddPicture(row.TestMethodName & row.Count, img)
+
+            ws.SetValue(rowIndex - 1, colIndex, row.Title)
+            picture.SetPosition(rowIndex, 0, colIndex, 0)
+
+            Dim rowsCount As Integer = picture.Image.Height / 20
+            rowIndex += rowsCount + 3
+        Next
+
+        Dim savePath As String = getSavePath()
+        Dim fullpath As String = Path.Combine(savePath, String.Format("{0}.xlsx", Me.TestContext.FullyQualifiedTestClassName))
+        package.SaveAs(New FileInfo(fullpath))
+        Me.TestContext.AddResultFile(fullpath)
     End Sub
 
 #Region " IE "
@@ -390,19 +428,33 @@ Public MustInherit Class AbstractSeleniumTest
         End Try
     End Function
 
+    Protected Function getSavePath()
+        Dim savePath As String = Path.Combine(Me.TestContext.ResultsDirectory, Me.TestContext.FullyQualifiedTestClassName.Replace(".", "\"))
+        If Not Directory.Exists(savePath) Then
+            Directory.CreateDirectory(savePath)
+        End If
+        Return savePath
+    End Function
+
     Protected Overloads Sub getScreenshot()
         getScreenshot(Nothing)
     End Sub
 
     Protected Overloads Sub getScreenshot(ByVal title As String)
-        Dim savePath As String = Path.Combine(Me.TestContext.ResultsDirectory, Me.TestContext.FullyQualifiedTestClassName.Replace(".", "\"))
-        If Not Directory.Exists(savePath) Then
-            Directory.CreateDirectory(savePath)
-        End If
+        Dim savePath As String = getSavePath()
         Dim fn As String = String.Format("{0}_{1:00000}{2}.png", Me.TestContext.TestName, screenshotCount, IIf(String.IsNullOrEmpty(title), String.Empty, "_" & title))
         Dim fullPath As String = Path.Combine(savePath, fn)
         CType(driver, ITakesScreenshot).GetScreenshot().SaveAsFile(fullPath, System.Drawing.Imaging.ImageFormat.Png)
         Me.TestContext.AddResultFile(fullPath)
+
+        Dim row As New ScreenshotRow
+        row.TestClassName = Me.TestContext.FullyQualifiedTestClassName
+        row.TestMethodName = Me.TestContext.TestName
+        row.FullPath = fullPath
+        row.Title = title
+        row.Count = screenshotCount
+        screenshots.Add(row)
+
         screenshotCount += 1
     End Sub
 
@@ -431,3 +483,32 @@ Public MustInherit Class AbstractSeleniumTest
 #End Region
 
 End Class
+
+
+Public Class ScreenshotRow
+
+    Public Property TestClassName As String
+    Public Property TestMethodName As String
+    Public Property FullPath As String
+    Public Property Title As String
+    Public Property Count As Integer
+
+End Class
+
+
+<AttributeUsage(AttributeTargets.Class, AllowMultiple:=False)>
+Public Class ExcelEvidenceAttribute
+    Inherits Attribute
+
+    Private _filename As String
+
+    Public Sub New()
+
+    End Sub
+
+    Public Sub New(ByVal filename As String)
+        _filename = filename
+    End Sub
+
+End Class
+

@@ -41,9 +41,11 @@ Imports MiYABiS.SeleniumTestAssist
     ''' <remarks></remarks>
     <ClassCleanup()>
     Public Shared Sub ClassCleanup()
-        SeleniumCleanup()
-
-        IISExpressManager.Stop()
+        Try
+            SeleniumCleanup()
+        Finally
+            IISExpressManager.Stop()
+        End Try
     End Sub
 
     ''' <summary>
@@ -98,6 +100,8 @@ Imports MiYABiS.SeleniumTestAssist
         page.Email("test")
         page.Password("hoge")
         page.RememberMe(True)
+
+        getScreenshot("入力後")
     End Sub
 
     <TestMethod(),
