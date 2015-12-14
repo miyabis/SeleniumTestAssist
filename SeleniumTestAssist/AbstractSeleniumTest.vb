@@ -7,7 +7,6 @@ Imports OpenQA.Selenium
 Imports OpenQA.Selenium.Remote
 Imports OpenQA.Selenium.IE
 Imports OpenQA.Selenium.Support.UI
-Imports Selenium
 Imports OpenQA.Selenium.Firefox
 Imports OfficeOpenXml
 
