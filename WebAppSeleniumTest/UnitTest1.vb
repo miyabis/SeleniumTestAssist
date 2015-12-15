@@ -108,10 +108,10 @@ Imports MiYABiS.SeleniumTestAssist
      Description("Demoページテスト"),
      TestCategory("正常系")>
     Public Sub TestMethod3()
-        'IEInitialize()
+        IEInitialize()
         'FirefoxInitialize()
         'ChromeInitialize()
-        EdgeInitialize("C:\Program Files (x86)\Microsoft Web Driver\")
+        'EdgeInitialize("C:\Program Files (x86)\Microsoft Web Driver\")
 
         Dim page As DemoPage
         page = createPage(Of DemoPage)()

@@ -44,6 +44,7 @@ Public MustInherit Class AbstractSeleniumTest
 #End Region
 
     Protected Friend Shared screenshots As IList(Of ScreenshotRow)
+    Protected Friend Shared excelEvidenceName As String
 
 #Region " Property "
 
@@ -71,6 +72,7 @@ Public MustInherit Class AbstractSeleniumTest
     Public Shared Sub SeleniumInitialize(ByVal baseUrl As String)
         _baseUrl = baseUrl
         screenshots = New List(Of ScreenshotRow)
+        excelEvidenceName = String.Empty
     End Sub
 
     ''' <summary>
@@ -78,8 +80,66 @@ Public MustInherit Class AbstractSeleniumTest
     ''' </summary>
     ''' <remarks></remarks>
     Public Shared Sub SeleniumCleanup()
+        Using package As New ExcelPackage()
+            Dim ws As ExcelWorksheet = Nothing
 
-        screenshots = New Dictionary(Of String, String)
+            Dim colsMax As Integer = 12
+            Dim oneColWidth As Integer = 64
+
+            Dim colIndex As Integer = 3
+            Dim rowIndex As Integer = 5
+            Dim sheetname As String = String.Empty
+            Dim cell As ExcelRange
+
+            For Each row As ScreenshotRow In screenshots
+                If sheetname <> row.TestMethodName Then
+                    ws = package.Workbook.Worksheets.Add(row.TestMethodName)
+                    ws.Cells.Style.Font.SetFromFont(New System.Drawing.Font("Meiryo UI", 10, System.Drawing.FontStyle.Regular))
+                    cell = ws.Cells(2, 2)
+                    cell.Value = row.TestMethodName
+                    cell.Style.Font.Bold = True
+                    cell.Style.Font.Size = 14
+                    sheetname = row.TestMethodName
+                    rowIndex = 5
+
+                    Dim asm As System.Reflection.Assembly
+                    asm = System.Reflection.Assembly.GetCallingAssembly
+                    Dim typ As Type
+                    typ = asm.GetType(row.TestClassName)
+                    Dim method As System.Reflection.MethodInfo
+                    method = typ.GetMethod(row.TestMethodName)
+                    Dim attrs() As Attribute
+                    attrs = method.GetCustomAttributes(GetType(DescriptionAttribute), False)
+                    If Not attrs.Count.Equals(0) Then
+                        ws.Cells("F2").Value = CType(attrs(0), DescriptionAttribute).Description
+                    End If
+                End If
+                Debug.Print("{0} = {1}", row.TestMethodName, row.FullPath)
+
+                Dim img As System.Drawing.Image
+                img = System.Drawing.Image.FromFile(row.FullPath)
+                Dim picture = ws.Drawings.AddPicture(row.Filename, img)
+                picture.SetPosition(rowIndex, 0, colIndex, 0)
+                If picture.Image.Size.Width > (colsMax * oneColWidth) Then
+                    Dim val As Integer
+                    val = ((colsMax * oneColWidth) / picture.Image.Width) * 100 - 1
+                    picture.SetSize(val)
+                End If
+
+                cell = ws.Cells(rowIndex - 1, colIndex)
+                cell.Value = row.Title
+                cell.Style.Font.Bold = True
+                cell.Style.Font.Size = 14
+
+                'Dim rowsCount As Integer = picture.Image.Height / 20
+                rowIndex += picture.To.Row + 4
+            Next
+
+            package.SaveAs(New FileInfo(excelEvidenceName))
+        End Using
+
+        screenshots = New List(Of ScreenshotRow)
+        excelEvidenceName = String.Empty
     End Sub
 
     ''' <summary>
@@ -107,38 +167,14 @@ Public MustInherit Class AbstractSeleniumTest
         End Try
         Assert.AreEqual("", verificationErrors.ToString())
 
-        Dim package As New ExcelPackage()
-        Dim ws As ExcelWorksheet = Nothing
-
-        Dim colIndex As Integer = 2
-        Dim rowIndex As Integer = 2
-        Dim sheetname As String = String.Empty
-
-        For Each row As ScreenshotRow In screenshots
-            If sheetname <> row.TestMethodName Then
-                ws = package.Workbook.Worksheets.Add(row.TestMethodName)
-                ws.Cells.Style.Font.SetFromFont(New System.Drawing.Font("Meiryo UI", 10, System.Drawing.FontStyle.Regular))
-                sheetname = row.TestMethodName
-                rowIndex = 2
-            End If
-            Debug.Print("{0} = {1}", row.TestMethodName, row.FullPath)
-
-            Dim img As System.Drawing.Image
-            img = System.Drawing.Image.FromFile(row.FullPath)
-            Dim picture = ws.Drawings.AddPicture(row.TestMethodName & row.Count, img)
-
-            ws.SetValue(rowIndex - 1, colIndex, row.Title)
-            picture.SetPosition(rowIndex, 0, colIndex, 0)
-
-            Dim rowsCount As Integer = picture.Image.Height / 20
-            rowIndex += rowsCount + 3
-        Next
-
-        Dim savePath As String = getSavePath()
-        Dim fullpath As String = Path.Combine(savePath, String.Format("{0}.xlsx", Me.TestContext.FullyQualifiedTestClassName))
-        package.SaveAs(New FileInfo(fullpath))
-        Me.TestContext.AddResultFile(fullpath)
+        Me.TestContext.AddResultFile(_getExcelEvidenceName())
     End Sub
+
+    Private Function _getExcelEvidenceName() As String
+        Dim savePath As String = getSavePath()
+        excelEvidenceName = Path.Combine(savePath, String.Format("{0}.xlsx", Me.GetType().Name))
+        Return excelEvidenceName
+    End Function
 
 #Region " IE "
 
@@ -491,6 +527,12 @@ Public Class ScreenshotRow
     Public Property FullPath As String
     Public Property Title As String
     Public Property Count As Integer
+
+    Public ReadOnly Property Filename As String
+        Get
+            Return New FileInfo(Me.FullPath).Name
+        End Get
+    End Property
 
 End Class
 

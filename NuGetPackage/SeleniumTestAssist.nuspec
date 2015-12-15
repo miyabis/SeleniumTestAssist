@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MiYABiS.SeleniumTestAssist</id>
-    <version>1.3.0</version>
+    <version>1.3.0-Beta</version>
     <title>Selenium Test Assist</title>
     <authors>MiYABiS</authors>
     <owners>MiYABiS</owners>
@@ -24,11 +24,12 @@
       <dependency id="Selenium.Support" version="2.48.2" />
       <dependency id="Selenium.WebDriverBackedSelenium" version="2.48.2" />
       <dependency id="Selenium.RC" version="2.48.2" />
+      <dependency id="EPPlus" version="4.0.4" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
-    <file src="..\SeleniumTestAssist35\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
+    <file src="..\SeleniumTestAssist\bin\Release\SeleniumTestAssist.dll" target="lib\net35\SeleniumTestAssist.dll" />
+    <file src="..\SeleniumTestAssist\bin\Release\SeleniumTestAssist.xml" target="lib\net35\SeleniumTestAssist.xml" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.dll" target="lib\net40\SeleniumTestAssist.dll" />
     <file src="..\SeleniumTestAssist40\bin\Release\SeleniumTestAssist.xml" target="lib\net40\SeleniumTestAssist.xml" />
     <file src="..\SeleniumTestAssist45\bin\Release\SeleniumTestAssist.dll" target="lib\net45\SeleniumTestAssist.dll" />
