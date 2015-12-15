@@ -67,15 +67,23 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 * FirefoxRemoteInitialize
 * ChromeRemoteInitialize
 
+[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb)
+
 Screenshot
 =======
 The screenshot will be output to the result of MSTest when you use the method that was prepared .
 
+```vb
+Me.getScreenshot("add filename suffix")
+```
+
+[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L96)
 
 Launch the IISExpress
 =======
 Please use the " IISExpressManager " class to also start IISExpress in the test.
 
+[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28)
 
 License
 =======
