@@ -27,7 +27,8 @@
 
 <p>It is a wrapper library to use Selenium in MSTest.<br>
 Preparing such as Selenium is a little easier.<br>
-The screenshot will be output to the result of MSTest when you use the method that was prepared.</p>
+The screenshot will be output to the result of MSTest when you use the method that was prepared.
+Get a screen shot that is output as Excel.  </p>
 
 <h1>
 <a id="how-to-get" class="anchor" href="#how-to-get" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to get</h1>
@@ -97,15 +98,26 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 <li>ChromeRemoteInitialize</li>
 </ul>
 
+<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb">Sample Code</a></p>
+
 <h1>
 <a id="screenshot" class="anchor" href="#screenshot" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshot</h1>
 
-<p>The screenshot will be output to the result of MSTest when you use the method that was prepared .</p>
+<p>The screenshot will be output to the result of MSTest when you use the method that was prepared .<br>
+Get a screen shot that is output as Excel.<br>
+To Excel output , please run the base.TestCleanup and SeleniumCleanup.</p>
+
+<div class="highlight highlight-source-vbnet"><pre><span class="pl-k">Me.</span>getScreenshot(<span class="pl-s">"add filename suffix"</span>)</pre></div>
+
+<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L98">Sample Code</a> 
+<a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.xlsx">Sample Excel</a></p>
 
 <h1>
 <a id="launch-the-iisexpress" class="anchor" href="#launch-the-iisexpress" aria-hidden="true"><span class="octicon octicon-link"></span></a>Launch the IISExpress</h1>
 
 <p>Please use the " IISExpressManager " class to also start IISExpress in the test.</p>
+
+<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28">Sample Code</a></p>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
