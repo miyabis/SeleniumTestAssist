@@ -6,6 +6,7 @@
 It is a wrapper library to use Selenium in MSTest.  
 Preparing such as Selenium is a little easier.  
 The screenshot will be output to the result of MSTest when you use the method that was prepared.
+Get a screen shot that is output as Excel.  
 
 
 How to get
@@ -67,23 +68,28 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 * FirefoxRemoteInitialize
 * ChromeRemoteInitialize
 
-[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb)
+[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb)
 
 Screenshot
 =======
-The screenshot will be output to the result of MSTest when you use the method that was prepared .
+The screenshot will be output to the result of MSTest when you use the method that was prepared .  
+Get a screen shot that is output as Excel.  
+To Excel output , please run the base.TestCleanup and SeleniumCleanup.
 
 ```vb
 Me.getScreenshot("add filename suffix")
 ```
 
-[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L96)
+[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L98) 
+[Sample Excel](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.xlsx)
+
+
 
 Launch the IISExpress
 =======
 Please use the " IISExpressManager " class to also start IISExpress in the test.
 
-[Sample](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28)
+[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28)
 
 License
 =======

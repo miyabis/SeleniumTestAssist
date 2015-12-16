@@ -62,7 +62,7 @@ Imports MiYABiS.SeleniumTestAssist
     ''' <remarks></remarks>
     <TestCleanup()>
     Public Overrides Sub TestCleanup()
-        MyBase.TestCleanup()
+        MyBase.TestCleanup("最後")
     End Sub
 
 #End Region
@@ -101,7 +101,8 @@ Imports MiYABiS.SeleniumTestAssist
         page.Password("hoge")
         page.RememberMe(True)
 
-        getScreenshot("入力後")
+        getScreenshot("入力後", "メモです。")
+        getScreenshot("テスト", "ノートがこんな感じで表示されます。")
     End Sub
 
     <TestMethod(),

@@ -90,6 +90,7 @@ Public MustInherit Class AbstractSeleniumTest
             Dim rowIndex As Integer = 5
             Dim sheetname As String = String.Empty
             Dim cell As ExcelRange
+            Dim imgCount As Integer
 
             For Each row As ScreenshotRow In screenshots
                 If sheetname <> row.TestMethodName Then
@@ -97,10 +98,14 @@ Public MustInherit Class AbstractSeleniumTest
                     ws.Cells.Style.Font.SetFromFont(New System.Drawing.Font("Meiryo UI", 10, System.Drawing.FontStyle.Regular))
                     cell = ws.Cells(2, 2)
                     cell.Value = row.TestMethodName
-                    cell.Style.Font.Bold = True
-                    cell.Style.Font.Size = 14
+                    cell.Style.Font.Size = 16
+                    cell = ws.Cells(2, 2, 2, 15)
+                    cell.Style.Font.Color.SetColor(System.Drawing.Color.White)
+                    cell.Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                    cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.RoyalBlue)
                     sheetname = row.TestMethodName
                     rowIndex = 5
+                    imgCount = 1
 
                     Dim asm As System.Reflection.Assembly
                     asm = System.Reflection.Assembly.GetCallingAssembly
@@ -111,28 +116,53 @@ Public MustInherit Class AbstractSeleniumTest
                     Dim attrs() As Attribute
                     attrs = method.GetCustomAttributes(GetType(DescriptionAttribute), False)
                     If Not attrs.Count.Equals(0) Then
-                        ws.Cells("F2").Value = CType(attrs(0), DescriptionAttribute).Description
+                        cell = ws.Cells(2, 15)
+                        cell.Value = CType(attrs(0), DescriptionAttribute).Description
+                        cell.Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Right
                     End If
                 End If
-                Debug.Print("{0} = {1}", row.TestMethodName, row.FullPath)
 
                 Dim img As System.Drawing.Image
                 img = System.Drawing.Image.FromFile(row.FullPath)
                 Dim picture = ws.Drawings.AddPicture(row.Filename, img)
                 picture.SetPosition(rowIndex, 0, colIndex, 0)
+                Dim height As Integer = picture.Image.Height
                 If picture.Image.Size.Width > (colsMax * oneColWidth) Then
                     Dim val As Integer
                     val = ((colsMax * oneColWidth) / picture.Image.Width) * 100 - 1
                     picture.SetSize(val)
+                    height = height * (val / 100)
                 End If
 
                 cell = ws.Cells(rowIndex - 1, colIndex)
-                cell.Value = row.Title
-                cell.Style.Font.Bold = True
+                cell.Value = String.Format("{0}. {1}", imgCount, row.Title)
                 cell.Style.Font.Size = 14
 
-                'Dim rowsCount As Integer = picture.Image.Height / 20
-                rowIndex += picture.To.Row + 4
+                cell = ws.Cells(rowIndex - 1, 15)
+                cell.Value = row.Note
+                cell.Style.Font.Size = 11
+                cell.Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Right
+
+                cell = ws.Cells(rowIndex - 1, 3, rowIndex - 1, 15)
+                cell.Style.Font.Color.SetColor(System.Drawing.Color.White)
+                cell.Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.CornflowerBlue)
+
+                Dim rowsCount As Integer = Math.Ceiling(height / 20)
+                rowIndex += rowsCount + 4
+
+                cell = ws.Cells(rowIndex - 3, 4)
+                cell.Value = row.WindowTitle
+                cell.Style.Font.Size = 9
+                cell.Style.Font.Color.SetColor(System.Drawing.Color.Gray)
+
+                cell = ws.Cells(rowIndex - 3, 15)
+                cell.Value = row.Filename
+                cell.Style.Font.Size = 9
+                cell.Style.Font.Color.SetColor(System.Drawing.Color.Silver)
+                cell.Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Right
+
+                imgCount += 1
             Next
 
             package.SaveAs(New FileInfo(excelEvidenceName))
@@ -155,10 +185,14 @@ Public MustInherit Class AbstractSeleniumTest
     ''' 必要であればオーバーライドしてください。
     ''' </summary>
     ''' <remarks></remarks>
-    Public Overridable Sub TestCleanup()
+    Public Overridable Overloads Sub TestCleanup()
+        Me.TestCleanup(String.Empty, String.Empty)
+    End Sub
+
+    Public Overloads Sub TestCleanup(ByVal title As String, Optional ByVal note As String = "")
         Try
             If driver IsNot Nothing Then
-                getScreenshot()
+                getScreenshot(title, note)
             End If
         Finally
             If driver IsNot Nothing Then
@@ -475,7 +509,7 @@ Public MustInherit Class AbstractSeleniumTest
         getScreenshot(Nothing)
     End Sub
 
-    Protected Overloads Sub getScreenshot(ByVal title As String)
+    Protected Overloads Sub getScreenshot(ByVal title As String, Optional ByVal note As String = "")
         Dim savePath As String = getSavePath()
         Dim fn As String = String.Format("{0}_{1:00000}{2}.png", Me.TestContext.TestName, screenshotCount, IIf(String.IsNullOrEmpty(title), String.Empty, "_" & title))
         Dim fullPath As String = Path.Combine(savePath, fn)
@@ -488,6 +522,8 @@ Public MustInherit Class AbstractSeleniumTest
         row.FullPath = fullPath
         row.Title = title
         row.Count = screenshotCount
+        row.Note = note
+        row.WindowTitle = driver.Title
         screenshots.Add(row)
 
         screenshotCount += 1
@@ -527,6 +563,8 @@ Public Class ScreenshotRow
     Public Property FullPath As String
     Public Property Title As String
     Public Property Count As Integer
+    Public Property Note As String
+    Public Property WindowTitle As String
 
     Public ReadOnly Property Filename As String
         Get
