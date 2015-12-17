@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MiYABiS.SeleniumTestAssist</id>
-    <version>1.3.0-Beta</version>
+    <version>1.4.0-Beta</version>
     <title>Selenium Test Assist</title>
     <authors>MiYABiS</authors>
     <owners>MiYABiS</owners>
@@ -13,6 +13,7 @@
       It is a wrapper library to use Selenium in MSTest.
       Preparing such as Selenium is a little easier.
       The screenshot will be output to the result of MSTest when you use the method that was prepared.
+      Get a screen shot that is output as Excel.
     </description>
     <summary></summary>
     <copyright>Copyright © 2015 MiYABiS All Rights Reserved.</copyright>
