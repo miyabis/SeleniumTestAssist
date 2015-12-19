@@ -5,7 +5,7 @@
 
 It is a wrapper library to use Selenium in MSTest.  
 Preparing such as Selenium is a little easier.  
-The screenshot will be output to the result of MSTest when you use the method that was prepared.
+The screenshot will be output to the result of MSTest when you use the method that was prepared.  
 Get a screen shot that is output as Excel.  
 
 
@@ -42,8 +42,16 @@ Programming
 =======
 
 Please be inherited by the test class "AbstractSeleniumTest" class.  
-In the method of initialization and termination of the attributes of the test , you run the following methods.
 
+```vb
+<TestClass()>
+Public Class UnitTest1
+    Inherits AbstractSeleniumTest
+
+End Class
+```
+
+In the method of initialization and termination of the attributes of the test , you run the following methods.
 It is already mounted if you use the " Selenium test class " of the template.
 
 * ClassInitialize : SeleniumInitialize
