@@ -105,6 +105,9 @@
     <Compile Include="..\SeleniumTestAssist\IISExpressManager.vb">
       <Link>IISExpressManager.vb</Link>
     </Compile>
+    <Compile Include="..\SeleniumTestAssist\ScreenshotRow.vb">
+      <Link>ScreenshotRow.vb</Link>
+    </Compile>
     <Compile Include="..\SeleniumTestAssist\SeleniumAction.vb">
       <Link>SeleniumAction.vb</Link>
     </Compile>

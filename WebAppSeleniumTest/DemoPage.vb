@@ -5,14 +5,8 @@ Imports MiYABiS.SeleniumTestAssist
 Public Class DemoPage
     Inherits SeleniumAction
 
-    Public Overrides ReadOnly Property MyPageName As String
-        Get
-            Return "/Demo"
-        End Get
-    End Property
-
-    Public Sub New(ByVal driver As IWebDriver, ByVal baseUrl As String)
-        MyBase.New(driver, baseUrl)
+    Public Sub New(ByVal driver As IWebDriver)
+        MyBase.New(driver)
     End Sub
 
     Public Sub TextBox1(ByVal value As String)

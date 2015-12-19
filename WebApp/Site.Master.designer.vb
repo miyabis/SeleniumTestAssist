@@ -14,6 +14,15 @@ Option Explicit On
 Partial Public Class SiteMaster
     
     '''<summary>
+    '''lnkAbout コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents lnkAbout As Global.System.Web.UI.HtmlControls.HtmlAnchor
+    
+    '''<summary>
     '''MainContent コントロール。
     '''</summary>
     '''<remarks>

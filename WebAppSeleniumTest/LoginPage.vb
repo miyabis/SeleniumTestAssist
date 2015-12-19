@@ -1,32 +1,41 @@
 ﻿
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.PageObjects
 Imports MiYABiS.SeleniumTestAssist
 
 Public Class LoginPage
     Inherits SeleniumAction
 
-    Public Overrides ReadOnly Property MyPageName As String
-        Get
-            Return "/Account/Login"
-        End Get
-    End Property
+    <FindsBy([Using]:="MainContent_Email")>
+    Private _email As IWebElement
 
-    Public Sub New(ByVal driver As IWebDriver, ByVal baseUrl As String)
-        MyBase.New(driver, baseUrl)
+    <FindsBy([Using]:="MainContent_Password")>
+    Private _password As IWebElement
+
+    <FindsBy([Using]:="MainContent_RememberMe")>
+    Private _rememberMe As IWebElement
+
+    <FindsBy([Using]:="MainContent_btnLogIn")>
+    Private _LogIn As IWebElement
+
+    Public Sub New(ByVal driver As IWebDriver)
+        MyBase.New(driver)
     End Sub
 
     Public Sub Email(ByVal value As String)
-        Driver.FindElement(By.Id("MainContent_Email")).Clear()
-        Driver.FindElement(By.Id("MainContent_Email")).SendKeys(value)
+        Typing(_email, value)
     End Sub
 
     Public Sub Password(ByVal value As String)
-        Driver.FindElement(By.Id("MainContent_Password")).Clear()
-        Driver.FindElement(By.Id("MainContent_Password")).SendKeys(value)
+        Typing(_password, value)
     End Sub
 
     Public Sub RememberMe(ByVal value As Boolean)
-        Driver.FindElement(By.Id("MainContent_RememberMe")).Click()
+        Check(_rememberMe, value)
+    End Sub
+
+    Public Sub LogIn()
+        Click(_LogIn)
     End Sub
 
 End Class

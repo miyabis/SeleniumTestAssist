@@ -1,49 +1,43 @@
 ﻿
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.PageObjects
 Imports MiYABiS.SeleniumTestAssist
-Imports OpenQA.Selenium.Support.UI
 
 Public Class DefaultPage
     Inherits SeleniumAction
 
-    Public Overrides ReadOnly Property MyPageName As String
-        Get
-            Return "Default.aspx"
-        End Get
-    End Property
+    <FindsBy(How:=How.CssSelector, [Using]:=".hoge")>
+    Private _hoge As IWebElement
 
-    Public Sub New(ByVal driver As IWebDriver, ByVal baseUrl As String)
-        MyBase.New(driver, baseUrl)
+    <FindsBy([Using]:="MainContent_txtTest")>
+    Private _test As IWebElement
+
+    <FindsBy([Using]:="MainContent_btnTest")>
+    Private _BtnTest As IWebElement
+
+    <FindsBy([Using]:="lnkAbout")>
+    Private _aboutLink As IWebElement
+
+    Public Sub New(ByVal driver As IWebDriver)
+        MyBase.New(driver)
     End Sub
 
-    Public ReadOnly Property Hoge() As String
-        Get
-            Return Driver.FindElement(By.CssSelector(".hoge")).Text
-        End Get
-    End Property
+    Public Sub BtnTest()
+        _BtnTest.Click()
+    End Sub
 
-    Public Property Test() As String
-        Get
-            Return Driver.FindElement(By.Id("MainContent_txtTest")).GetAttribute("Value")
-            'Return FindElementWaitUntil(By.Id("MainContent_txtTest")).GetAttribute("Value")
-        End Get
-        Set(value As String)
-            Typing("MainContent_txtTest", value)
-        End Set
-    End Property
-
-    Public ReadOnly Property BtnTest() As IWebElement
-        Get
-            Return Driver.FindElement(By.Id("MainContent_btnTest"))
-        End Get
-    End Property
+    Public Function About() As AboutPage
+        Click(_aboutLink)
+        Return createPage(Of AboutPage)()
+    End Function
 
     Public Sub HogeAssert(ByVal value As String)
-        Assert.AreEqual(value, Me.Hoge)
+        Assert.AreEqual(value, _hoge.Text)
     End Sub
 
     Public Sub TestAssert(ByVal value As String)
-        Assert.AreEqual(value, Me.Test)
+        Dim element As IWebElement = FindElementWaitUntil(By.Id("MainContent_txtTest"))
+        Assert.AreEqual(value, GetValue(_test))
     End Sub
 
 End Class

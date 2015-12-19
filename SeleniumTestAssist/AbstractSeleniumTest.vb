@@ -9,6 +9,7 @@ Imports OpenQA.Selenium.IE
 Imports OpenQA.Selenium.Support.UI
 Imports OpenQA.Selenium.Firefox
 Imports OfficeOpenXml
+Imports OpenQA.Selenium.Support.PageObjects
 
 ''' <summary>
 ''' Selemium2 を使ったブラウザテスト用抽象クラス
@@ -43,8 +44,9 @@ Public MustInherit Class AbstractSeleniumTest
 #End Region
 #End Region
 
+    Protected Friend Shared testMethods As IDictionary(Of String, Integer)
     Protected Friend Shared screenshots As IList(Of ScreenshotRow)
-    Protected Friend Shared callingAssembly As System.Reflection.Assembly
+    Protected Friend Shared callingAssembly As Reflection.Assembly
 
 #Region " Property "
 
@@ -58,6 +60,13 @@ Public MustInherit Class AbstractSeleniumTest
         End Get
         Set(ByVal value As TestContext)
             testContextInstance = value
+            If testMethods.ContainsKey(Me.TestContext.TestName) Then
+                Dim cnt As Integer
+                cnt = testMethods(Me.TestContext.TestName)
+                testMethods(Me.TestContext.TestName) = cnt + 1
+            Else
+                testMethods.Add(Me.TestContext.TestName, 1)
+            End If
         End Set
     End Property
 
@@ -72,7 +81,8 @@ Public MustInherit Class AbstractSeleniumTest
     Public Shared Sub SeleniumInitialize(ByVal baseUrl As String)
         _baseUrl = baseUrl
         screenshots = New List(Of ScreenshotRow)
-        callingAssembly = System.Reflection.Assembly.GetCallingAssembly
+        testMethods = New Dictionary(Of String, Integer)
+        callingAssembly = Reflection.Assembly.GetCallingAssembly
     End Sub
 
     ''' <summary>
@@ -137,7 +147,7 @@ Public MustInherit Class AbstractSeleniumTest
         driver = New InternetExplorerDriver(ieDriverServer, opt)
         capabilities = DirectCast(driver, InternetExplorerDriver).Capabilities
 
-        Dim callingMethod = New System.Diagnostics.StackTrace(1, False).GetFrame(0).GetMethod()
+        Dim callingMethod = New StackTrace(1, False).GetFrame(0).GetMethod()
         Dim attrs() As Attribute = callingMethod.GetCustomAttributes(GetType(DescriptionAttribute), False)
         Dim description As DescriptionAttribute = Nothing
         For Each attr As Attribute In attrs
@@ -348,6 +358,26 @@ Public MustInherit Class AbstractSeleniumTest
 
 #End Region
 
+    ''' <summary>
+    ''' 指定したURLを開く
+    ''' </summary>
+    ''' <remarks>Aspx又はMVCのコマンドを開く</remarks>
+    Protected Sub Open(ByVal testPageUrl As String)
+        driver.Navigate().GoToUrl(String.Format("{0}{1}", _baseUrl, testPageUrl))
+    End Sub
+
+    ''' <summary>
+    ''' 指定したURLを開く
+    ''' </summary>
+    ''' <param name="testPageUrl"></param>
+    ''' <param name="width">ウィンドウの幅を指定</param>
+    ''' <param name="height">ウィンドウの高さを指定</param>
+    ''' <remarks>Aspx又はMVCのコマンドを開く</remarks>
+    Protected Sub Open(ByVal testPageUrl As String, ByVal width As Integer, ByVal height As Integer)
+        driver.Manage.Window.Size = New System.Drawing.Size(width, height)
+        Me.Open(testPageUrl)
+    End Sub
+
     Protected Sub outputExcel()
         Dim fname As New FileInfo(_getExcelEvidenceName())
 
@@ -365,7 +395,21 @@ Public MustInherit Class AbstractSeleniumTest
 
             For Each row As ScreenshotRow In screenshots
                 If sheetname <> row.TestMethodName Then
-                    ws = package.Workbook.Worksheets.Add(row.TestMethodName)
+                    Dim name As String
+                    'Dim lstWs() As ExcelWorksheet
+                    'lstWs = package.Workbook.Worksheets.Select(Of ExcelWorksheet)(
+                    'Function(sheet)
+                    '    If sheet.Name.StartsWith(row.TestMethodName) Then
+                    '        Return sheet
+                    '    End If
+                    '    Return Nothing
+                    'End Function).ToArray
+                    'name = row.TestMethodName
+                    'If Not lstWs.Count.Equals(0) Then
+                    '    name &= "_" & (lstWs.Count + 1)
+                    'End If
+                    name = String.Format("{0}_{1:000}", row.TestMethodName, testMethods(row.TestMethodName))
+                    ws = package.Workbook.Worksheets.Add(name)
                     ws.Cells.Style.Font.SetFromFont(New System.Drawing.Font("Meiryo UI", 10, System.Drawing.FontStyle.Regular))
                     cell = ws.Cells(2, 2)
                     cell.Value = row.TestMethodName
@@ -512,7 +556,7 @@ Public MustInherit Class AbstractSeleniumTest
 
     Protected Overloads Sub getScreenshot(ByVal title As String, Optional ByVal note As String = "")
         Dim savePath As String = getSavePath()
-        Dim fn As String = String.Format("{0}_{1:00000}{2}.png", Me.TestContext.TestName, screenshotCount, IIf(String.IsNullOrEmpty(title), String.Empty, "_" & title))
+        Dim fn As String = String.Format("{0}_{1:000}_{2:00000}{3}.png", Me.TestContext.TestName, testMethods(Me.TestContext.TestName), screenshotCount, IIf(String.IsNullOrEmpty(title), String.Empty, "_" & title))
         Dim fullPath As String = Path.Combine(savePath, fn)
         CType(driver, ITakesScreenshot).GetScreenshot().SaveAsFile(fullPath, System.Drawing.Imaging.ImageFormat.Png)
         Me.TestContext.AddResultFile(fullPath)
@@ -532,11 +576,17 @@ Public MustInherit Class AbstractSeleniumTest
     End Sub
 
     Protected Sub sleep(Optional ByVal value As Integer = 300)
-        System.Threading.Thread.Sleep(value)
+        Threading.Thread.Sleep(value)
     End Sub
 
     Protected Function createPage(Of T)() As T
-        Return CType(Activator.CreateInstance(GetType(T), New Object() {driver, _baseUrl}), T)
+        Dim page As T = PageFactory.InitElements(Of T)(driver)
+        Dim pageAction As Object = page
+
+        If TypeOf pageAction Is AbstractSeleniumTest Then
+            CType(pageAction, SeleniumAction).BaseUrl = _baseUrl
+        End If
+        Return page
     End Function
 
     Private Sub _testInitialize()
@@ -562,24 +612,6 @@ Public MustInherit Class AbstractSeleniumTest
 
 End Class
 
-
-Public Class ScreenshotRow
-
-    Public Property TestClassName As String
-    Public Property TestMethodName As String
-    Public Property FullPath As String
-    Public Property Title As String
-    Public Property Count As Integer
-    Public Property Note As String
-    Public Property WindowTitle As String
-
-    Public ReadOnly Property Filename As String
-        Get
-            Return New FileInfo(Me.FullPath).Name
-        End Get
-    End Property
-
-End Class
 
 
 <AttributeUsage(AttributeTargets.Class, AllowMultiple:=False)>

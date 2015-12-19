@@ -1,5 +1,6 @@
 ﻿
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.PageObjects
 Imports OpenQA.Selenium.Support.UI
 
 ''' <summary>
@@ -21,6 +22,14 @@ Public MustInherit Class SeleniumAction
     ''' コンストラクタ
     ''' </summary>
     ''' <param name="driver">WebDriverを指定</param>
+    Public Sub New(ByVal driver As IWebDriver)
+        Me.New(driver, String.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' コンストラクタ
+    ''' </summary>
+    ''' <param name="driver">WebDriverを指定</param>
     ''' <param name="baseUrl">ベースとなるURLを指定</param>
     Public Sub New(ByVal driver As IWebDriver, ByVal baseUrl As String)
         _driver = driver
@@ -31,16 +40,6 @@ Public MustInherit Class SeleniumAction
         Dim timeout As TimeSpan = New TimeSpan(0, 0, 10)
         _driverWait = New WebDriverWait(_driver, timeout)
     End Sub
-
-#End Region
-
-#Region " MustOverride "
-
-    ''' <summary>
-    ''' 対象となるページ又はコマンド
-    ''' </summary>
-    ''' <returns></returns>
-    Public MustOverride ReadOnly Property MyPageName As String
 
 #End Region
 
@@ -60,9 +59,19 @@ Public MustInherit Class SeleniumAction
     ''' ベースURL
     ''' </summary>
     ''' <returns></returns>
-    Public ReadOnly Property BaseUrl As String
+    Friend Property BaseUrl As String
         Get
             Return _baseUrl
+        End Get
+        Set(value As String)
+            _baseUrl = value
+        End Set
+    End Property
+
+    Friend ReadOnly Property driverWait As WebDriverWait
+        Get
+            Dim timeout As TimeSpan = New TimeSpan(0, 0, 10)
+            Return New WebDriverWait(_driver, timeout)
         End Get
     End Property
 
@@ -71,32 +80,22 @@ Public MustInherit Class SeleniumAction
 #Region " Actions "
 
     ''' <summary>
-    ''' 指定したURLを開く
-    ''' </summary>
-    ''' <remarks>Aspx又はMVCのコマンドを開く</remarks>
-    Public Overloads Sub Open()
-        Driver.Navigate().GoToUrl(String.Format("{0}{1}", BaseUrl, MyPageName))
-    End Sub
-
-    ''' <summary>
-    ''' 指定したURLを開く
-    ''' </summary>
-    ''' <param name="width">ウィンドウの幅を指定</param>
-    ''' <param name="height">ウィンドウの高さを指定</param>
-    ''' <remarks>Aspx又はMVCのコマンドを開く</remarks>
-    Public Overloads Sub Open(ByVal width As Integer, ByVal height As Integer)
-        Driver.Manage.Window.Size = New Drawing.Size(width, height)
-        Me.Open()
-    End Sub
-
-    ''' <summary>
     ''' テキストボックスなどに文字を入力(タイプ)する
     ''' </summary>
     ''' <param name="id">id属性</param>
     ''' <param name="value">入力値</param>
     Public Sub Typing(ByVal id As String, ByVal value As String)
-        Driver.FindElement(By.Id(id)).Clear()
-        Driver.FindElement(By.Id(id)).SendKeys(value)
+        Typing(Driver.FindElement(By.Id(id)), value)
+    End Sub
+
+    ''' <summary>
+    ''' テキストボックスなどに文字を入力(タイプ)する
+    ''' </summary>
+    ''' <param name="element">element</param>
+    ''' <param name="value">入力値</param>
+    Public Sub Typing(ByVal element As IWebElement, ByVal value As String)
+        element.Clear()
+        element.SendKeys(value)
     End Sub
 
     ''' <summary>
@@ -117,11 +116,45 @@ Public MustInherit Class SeleniumAction
     End Sub
 
     ''' <summary>
+    ''' チェックボックスのチェック有無を入力する
+    ''' </summary>
+    ''' <param name="element">element</param>
+    ''' <param name="value">入力値</param>
+    Public Sub Check(ByVal element As IWebElement, ByVal value As Boolean)
+        If value AndAlso element.Selected Then
+            ' 既にTrueです
+            Return
+        End If
+        If Not value AndAlso Not element.Selected Then
+            ' 既にFalseです
+            Return
+        End If
+        Click(element)
+    End Sub
+
+    ''' <summary>
+    ''' 値の取得
+    ''' </summary>
+    ''' <param name="element"></param>
+    ''' <returns></returns>
+    Public Function GetValue(ByVal element As IWebElement) As String
+        Return element.GetAttribute("Value")
+    End Function
+
+    ''' <summary>
     ''' ボタンやリンクをクリックする
     ''' </summary>
     ''' <param name="id">id属性</param>
     Public Sub Click(ByVal id As String)
         Driver.FindElement(By.Id(id)).Click()
+    End Sub
+
+    ''' <summary>
+    ''' ボタンやリンクをクリックする
+    ''' </summary>
+    ''' <param name="element">element</param>
+    Public Sub Click(ByVal element As IWebElement)
+        element.Click()
     End Sub
 
     ''' <summary>
@@ -163,23 +196,32 @@ Public MustInherit Class SeleniumAction
         selectElement.SelectByIndex(value)
     End Sub
 
-    'TODO:
-    '''' <summary>
-    '''' FindElement をデフォルト１０秒まで取得できるまで待つ
-    '''' </summary>
-    '''' <param name="by"></param>
-    '''' <returns></returns>
-    'Public Function FindElementWaitUntil(ByVal by As By) As IWebElement
-    '    Return _driverWait.Until(
-    '        Function(d)
-    '            Dim el As IWebElement
-    '            el = d.FindElement(by)
-    '            If el.Displayed And el.Enabled Then
-    '                Return el
-    '            End If
-    '            Return Nothing
-    '        End Function)
-    'End Function
+    ''' <summary>
+    ''' FindElement をデフォルト１０秒まで取得できるまで待つ
+    ''' </summary>
+    ''' <param name="by"></param>
+    ''' <returns></returns>
+    Public Function FindElementWaitUntil(ByVal by As By) As IWebElement
+        Return driverWait.Until(
+            Function(d)
+                Dim el As IWebElement
+                el = d.FindElement(by)
+                If el.Displayed And el.Enabled Then
+                    Return el
+                End If
+                Return Nothing
+            End Function)
+    End Function
+
+    Public Function createPage(Of T)() As T
+        Dim page As T = PageFactory.InitElements(Of T)(Driver)
+        Dim pageAction As Object = page
+
+        If TypeOf pageAction Is AbstractSeleniumTest Then
+            CType(pageAction, SeleniumAction).BaseUrl = _baseUrl
+        End If
+        Return page
+    End Function
 
 #End Region
 

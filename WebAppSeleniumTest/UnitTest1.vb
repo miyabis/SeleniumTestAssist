@@ -1,7 +1,9 @@
 ﻿
 Imports MiYABiS.SeleniumTestAssist
 
-<TestClass()> Public Class UnitTest1
+<TestClass(),
+    DeploymentItem("IEDriverServer.exe")>
+Public Class UnitTest1
     Inherits AbstractSeleniumTest
 
 #Region " Declare "
@@ -54,6 +56,7 @@ Imports MiYABiS.SeleniumTestAssist
     ''' <remarks></remarks>
     <TestInitialize()>
     Public Overrides Sub TestInitialize()
+        MyBase.TestInitialize()
     End Sub
 
     ''' <summary>
@@ -73,36 +76,51 @@ Imports MiYABiS.SeleniumTestAssist
     Public Sub TestMethod1()
         IEInitialize()
 
+        Open("Default.aspx", 1000, 1000)
+
         Dim page As DefaultPage
         page = createPage(Of DefaultPage)()
 
-        page.Open(1000, 1000)
-
         page.HogeAssert("テスト")
 
-        page.BtnTest.Click()
+        getScreenshot()
+
+        page.BtnTest()
+
+        getScreenshot()
+
         page.TestAssert("btnTest Click!")
+
+        Dim page2 As AboutPage
+        page2 = page.About()
+
+        page2.H2Assert()
     End Sub
 
+    'DataSource("System.Data.Odbc", "Dsn=Excel Files;Driver={Microsoft Excel Driver (*.xls)};dbq=|DataDirectory|\\ExcelTestData.xls", "Login$", DataAccessMethod.Sequential)
     <TestMethod(),
      Description("ログインエラーとなること"),
-     TestCategory("エラー系")>
+     TestCategory("エラー系"),
+     DeploymentItem("TestData.csv"),
+     DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "TestData.csv", "TestData#csv", DataAccessMethod.Sequential)
+     >
     Public Sub TestMethod2()
         IEInitialize()
+
+        Open("/Account/Login", 1000, 1000)
 
         Dim page As LoginPage
         page = createPage(Of LoginPage)()
 
-        page.Open(1000, 1000)
-
         getScreenshot("オープン直後")
 
-        page.Email("test")
-        page.Password("hoge")
+        page.Email(Me.TestContext.DataRow("ID"))
+        page.Password(Me.TestContext.DataRow("Pass"))
         page.RememberMe(True)
 
-        getScreenshot("入力後", "メモです。")
-        getScreenshot("テスト", "ノートがこんな感じで表示されます。")
+        getScreenshot("入力後", "ノートがこんな感じで表示されます。")
+
+        page.LogIn()
     End Sub
 
     <TestMethod(),
@@ -114,11 +132,10 @@ Imports MiYABiS.SeleniumTestAssist
         'ChromeInitialize()
         'EdgeInitialize("C:\Program Files (x86)\Microsoft Web Driver\")
 
+        Open("/Demo")
+
         Dim page As DemoPage
         page = createPage(Of DemoPage)()
-
-        'page.Open(1000, 1000)
-        page.Open()
 
         page.TextBox1("test")
         page.CheckBox1(True)

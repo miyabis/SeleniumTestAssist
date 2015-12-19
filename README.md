@@ -51,6 +51,28 @@ It is already mounted if you use the " Selenium test class " of the template.
 * TestInitialize : Selenium Browser Initialize methods
 * TestCleanup : base.TestCleanup
 
+```vb
+    <ClassInitialize()>
+    Public Shared Sub ClassInitialize(ByVal testContext As TestContext)
+        SeleniumInitialize("http://localhost:8080/")
+    End Sub
+
+    <ClassCleanup()>
+    Public Shared Sub ClassCleanup()
+        SeleniumCleanup()
+    End Sub
+
+   <TestInitialize()>
+    Public Overrides Sub TestInitialize()
+        MyBase.TestInitialize()
+    End Sub
+
+    <TestCleanup()>
+    Public Overrides Sub TestCleanup()
+        MyBase.TestCleanup()
+    End Sub
+```
+
 Preparation method of Selenium is as follows .  
 It runs at initialization method or in each test gave a TestInitialize attribute .
 
@@ -61,6 +83,18 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 * FirefoxInitialize
 * ChromeInitialize
 
+```vb
+    <TestMethod()>
+    Public Sub TestMethod1()
+        IEInitialize()
+
+        Open("Default.aspx", 1000, 1000)
+
+        ...
+
+    End Sub
+```
+
 **Initialization of when running in SeleniumRC**
 
 * IERemoteInitialize
@@ -68,19 +102,32 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 * FirefoxRemoteInitialize
 * ChromeRemoteInitialize
 
+```vb
+    <TestMethod()>
+    Public Sub TestMethod1()
+        IERemoteInitialize("http://grid.selenium.server:4444/wd/hub")
+
+        Open("Default.aspx", 1000, 1000)
+
+        ...
+
+    End Sub
+```
+
 [Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb)
 
 Screenshot
 =======
 The screenshot will be output to the result of MSTest when you use the method that was prepared .  
 Get a screen shot that is output as Excel.  
-To Excel output , please run the base.TestCleanup and SeleniumCleanup.
+To Excel output , please run the base.TestCleanup and SeleniumCleanup.  
+Excel output uses a [EPPlus](http://epplus.codeplex.com).
 
 ```vb
 Me.getScreenshot("add filename suffix")
 ```
 
-[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L98) 
+[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb) 
 [Sample Excel](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.xlsx)
 
 
@@ -89,7 +136,25 @@ Launch the IISExpress
 =======
 Please use the " IISExpressManager " class to also start IISExpress in the test.
 
-[Sample Code](https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28)
+```vb
+    <ClassInitialize()>
+    Public Shared Sub ClassInitialize(ByVal testContext As TestContext)
+        IISExpressManager.ProjectName = "WebApp"
+        IISExpressManager.Port = "8080"
+        IISExpressManager.Start()
+
+        SeleniumInitialize("http://localhost:8080/")
+    End Sub
+
+    <ClassCleanup()>
+    Public Shared Sub ClassCleanup()
+        Try
+            SeleniumCleanup()
+        Finally
+            IISExpressManager.Stop()
+        End Try
+    End Sub
+```
 
 License
 =======
