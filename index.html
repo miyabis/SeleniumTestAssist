@@ -27,7 +27,7 @@
 
 <p>It is a wrapper library to use Selenium in MSTest.<br>
 Preparing such as Selenium is a little easier.<br>
-The screenshot will be output to the result of MSTest when you use the method that was prepared.
+The screenshot will be output to the result of MSTest when you use the method that was prepared.<br>
 Get a screen shot that is output as Excel.  </p>
 
 <h1>
@@ -65,10 +65,16 @@ Please search for , such as " chromedriver " in NuGet.</p>
 <h1>
 <a id="programming" class="anchor" href="#programming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Programming</h1>
 
-<p>Please be inherited by the test class "AbstractSeleniumTest" class.<br>
-In the method of initialization and termination of the attributes of the test , you run the following methods.</p>
+<p>Please be inherited by the test class "AbstractSeleniumTest" class.  </p>
 
-<p>It is already mounted if you use the " Selenium test class " of the template.</p>
+<div class="highlight highlight-source-vbnet"><pre><span class="pl-k">&lt;</span>TestClass()<span class="pl-k">&gt;</span>
+<span class="pl-k">Public</span> <span class="pl-k">Class</span> <span class="pl-en">UnitTest1</span>
+    <span class="pl-k">Inherits </span>AbstractSeleniumTest
+
+<span class="pl-k">End Class</span></pre></div>
+
+<p>In the method of initialization and termination of the attributes of the test , you run the following methods.
+It is already mounted if you use the " Selenium test class " of the template.</p>
 
 <ul>
 <li>ClassInitialize : SeleniumInitialize</li>
@@ -76,6 +82,26 @@ In the method of initialization and termination of the attributes of the test , 
 <li>TestInitialize : Selenium Browser Initialize methods</li>
 <li>TestCleanup : base.TestCleanup</li>
 </ul>
+
+<div class="highlight highlight-source-vbnet"><pre>    <span class="pl-k">&lt;</span>ClassInitialize()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Shared</span> <span class="pl-c1">Sub</span> <span class="pl-en">ClassInitialize</span>(<span class="pl-k">ByVal </span>testContext <span class="pl-k">As </span>TestContext)
+        SeleniumInitialize(<span class="pl-s">"http://localhost:8080/"</span>)
+<span class="pl-k">    End Sub</span>
+
+    <span class="pl-k">&lt;</span>ClassCleanup()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Shared</span> <span class="pl-c1">Sub</span> <span class="pl-en">ClassCleanup</span>()
+        SeleniumCleanup()
+<span class="pl-k">    End Sub</span>
+
+   <span class="pl-k">&lt;</span>TestInitialize()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Overrides</span> <span class="pl-c1">Sub</span> <span class="pl-en">TestInitialize</span>()
+        <span class="pl-k">MyBase.</span>TestInitialize()
+<span class="pl-k">    End Sub</span>
+
+    <span class="pl-k">&lt;</span>TestCleanup()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Overrides</span> <span class="pl-c1">Sub</span> <span class="pl-en">TestCleanup</span>()
+        <span class="pl-k">MyBase.</span>TestCleanup()
+<span class="pl-k">    End Sub</span></pre></div>
 
 <p>Preparation method of Selenium is as follows .<br>
 It runs at initialization method or in each test gave a TestInitialize attribute .</p>
@@ -89,6 +115,16 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 <li>ChromeInitialize</li>
 </ul>
 
+<div class="highlight highlight-source-vbnet"><pre>    <span class="pl-k">&lt;</span>TestMethod()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-c1">Sub</span> <span class="pl-en">TestMethod1</span>()
+        IEInitialize()
+
+        Open(<span class="pl-s">"Default.aspx"</span>, <span class="pl-c1">1000</span>, <span class="pl-c1">1000</span>)
+
+        <span class="pl-k">...</span>
+
+<span class="pl-k">    End Sub</span></pre></div>
+
 <p><strong>Initialization of when running in SeleniumRC</strong></p>
 
 <ul>
@@ -98,6 +134,16 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 <li>ChromeRemoteInitialize</li>
 </ul>
 
+<div class="highlight highlight-source-vbnet"><pre>    <span class="pl-k">&lt;</span>TestMethod()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-c1">Sub</span> <span class="pl-en">TestMethod1</span>()
+        IERemoteInitialize(<span class="pl-s">"http://grid.selenium.server:4444/wd/hub"</span>)
+
+        Open(<span class="pl-s">"Default.aspx"</span>, <span class="pl-c1">1000</span>, <span class="pl-c1">1000</span>)
+
+        <span class="pl-k">...</span>
+
+<span class="pl-k">    End Sub</span></pre></div>
+
 <p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb">Sample Code</a></p>
 
 <h1>
@@ -105,11 +151,12 @@ It runs at initialization method or in each test gave a TestInitialize attribute
 
 <p>The screenshot will be output to the result of MSTest when you use the method that was prepared .<br>
 Get a screen shot that is output as Excel.<br>
-To Excel output , please run the base.TestCleanup and SeleniumCleanup.</p>
+To Excel output , please run the base.TestCleanup and SeleniumCleanup.<br>
+Excel output uses a <a href="http://epplus.codeplex.com">EPPlus</a>.</p>
 
 <div class="highlight highlight-source-vbnet"><pre><span class="pl-k">Me.</span>getScreenshot(<span class="pl-s">"add filename suffix"</span>)</pre></div>
 
-<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L98">Sample Code</a> 
+<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb">Sample Code</a> 
 <a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.xlsx">Sample Excel</a></p>
 
 <h1>
@@ -117,7 +164,23 @@ To Excel output , please run the base.TestCleanup and SeleniumCleanup.</p>
 
 <p>Please use the " IISExpressManager " class to also start IISExpress in the test.</p>
 
-<p><a href="https://github.com/miyabis/SeleniumTestAssist/blob/master/WebAppSeleniumTest/UnitTest1.vb#L28">Sample Code</a></p>
+<div class="highlight highlight-source-vbnet"><pre>    <span class="pl-k">&lt;</span>ClassInitialize()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Shared</span> <span class="pl-c1">Sub</span> <span class="pl-en">ClassInitialize</span>(<span class="pl-k">ByVal </span>testContext <span class="pl-k">As </span>TestContext)
+        IISExpressManager<span class="pl-k">.</span>ProjectName <span class="pl-k">=</span> <span class="pl-s">"WebApp"</span>
+        IISExpressManager<span class="pl-k">.</span>Port <span class="pl-k">=</span> <span class="pl-s">"8080"</span>
+        IISExpressManager<span class="pl-k">.</span>Start()
+
+        SeleniumInitialize(<span class="pl-s">"http://localhost:8080/"</span>)
+<span class="pl-k">    End Sub</span>
+
+    <span class="pl-k">&lt;</span>ClassCleanup()<span class="pl-k">&gt;</span>
+    <span class="pl-k">Public</span> <span class="pl-k">Shared</span> <span class="pl-c1">Sub</span> <span class="pl-en">ClassCleanup</span>()
+        <span class="pl-k">Try</span>
+            SeleniumCleanup()
+        <span class="pl-k">Finally</span>
+            IISExpressManager<span class="pl-k">.</span><span class="pl-k">Stop</span>()
+        <span class="pl-k">End Try</span>
+<span class="pl-k">    End Sub</span></pre></div>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
